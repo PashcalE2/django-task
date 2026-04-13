@@ -53,10 +53,10 @@ class UserFaker(IFaker):
         return User(
             username=f"user{self.username_num}",
             password=self.password_hash,
-            first_name="first_name",  # self.faker.first_name(),
-            last_name="last_name",  # self.faker.last_name(),
-            email="email@email.com",  # self.faker.email(),
-            is_staff=False,  # self.faker.boolean(),
+            first_name=self.faker.first_name(),
+            last_name=self.faker.last_name(),
+            email=self.faker.email(),
+            is_staff=self.faker.boolean(),
         )
 
 
@@ -68,10 +68,10 @@ class VideoFaker(IFaker):
     def _fake_one(self):
         return Video(
             owner=self.faker.random_element(self.user_fakes),
-            is_published=False,  # self.faker.boolean(),
-            name="name",  # self.faker.text(max_nb_chars=50),
+            is_published=self.faker.boolean(),
+            name=self.faker.text(max_nb_chars=50),
             total_likes=0,
-            created_at=datetime.datetime.now(),  # self.faker.date_time(),
+            created_at=self.faker.date_time(),
         )
 
 

@@ -133,10 +133,16 @@ STATIC_URL = "static/"
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "standard": {
+            "format": "[%(asctime)s] [%(levelname)s] [%(name)s]: %(message)s",
+        },
+    },
     "handlers": {
         "console": {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
+            "formatter": "standard",
         },
         "file": {
             "level": "DEBUG",
@@ -145,8 +151,12 @@ LOGGING = {
         },
     },
     "loggers": {
+        "": {
+            "level": "DEBUG",
+            "handlers": ["console"],
+        },
         "django.db.backends": {
-            "handlers": [],  # "console", "file"
+            "handlers": ["console", "file"],  #
             "level": "DEBUG",
             "propagate": False,
         },
@@ -155,3 +165,6 @@ LOGGING = {
 
 
 AUTH_USER_MODEL = "users.User"
+
+
+REST_FRAMEWORK = {"EXCEPTION_HANDLER": "app.utils.custom_exception_handler"}
