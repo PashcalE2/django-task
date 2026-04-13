@@ -1,10 +1,9 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import User
 
 
 class Video(models.Model):
-    owner = models.ForeignKey(User, models.CASCADE, verbose_name="Владелец")
+    owner = models.ForeignKey("users.User", models.CASCADE, verbose_name="Владелец")
     is_published = models.BooleanField("Опубликовано")
     name = models.CharField("Название", max_length=255)
     total_likes = models.PositiveBigIntegerField("Число лайков", default=0)
@@ -32,7 +31,7 @@ class VideoFile(models.Model):
 class Like(models.Model):
     pk = models.CompositePrimaryKey("video", "user")
     video = models.ForeignKey(Video, models.CASCADE, verbose_name="Видео")
-    user = models.ForeignKey(User, models.CASCADE, verbose_name="Пользователь")
+    user = models.ForeignKey("users.User", models.CASCADE, verbose_name="Пользователь")
 
     def __str__(self):
         return f"{self.video.name}: {self.user.first_name}"

@@ -34,7 +34,9 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "videos.apps.VideosConfig",
+    "users.apps.UsersConfig",
     "rest_framework",
+    "django_extensions",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -119,7 +121,7 @@ TIME_ZONE = "UTC"
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -144,9 +146,12 @@ LOGGING = {
     },
     "loggers": {
         "django.db.backends": {
-            "handlers": ["console", "file"],
+            "handlers": [],  # "console", "file"
             "level": "DEBUG",
             "propagate": False,
         },
     },
 }
+
+
+AUTH_USER_MODEL = "users.User"
