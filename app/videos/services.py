@@ -3,8 +3,6 @@ from typing import Optional
 from .exceptions import LikedAlreadyError, NoLikeError
 from .models import Video, Like
 from users.models import User
-from django.db.models import Sum, Subquery, OuterRef, Value
-from django.db.models.functions import Coalesce
 
 logger = getLogger(__name__)
 
