@@ -19,9 +19,20 @@ class VideosViewSet(
     viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.ListModelMixin
 ):
     queryset = Video.objects.all()
+    serializer_class = VideoSerializer
 
-    def get_serializer_class(self):
-        return VideoSerializer
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        if self.action in ("likes", "ids"):
+            return qs.published()
+
+        qs = qs.prefetch_related("files")
+
+        if not self.request.user.is_staff:
+            return qs.published(self.request.user)
+
+        return qs
 
     @action(
         methods=["post", "delete"],
@@ -46,7 +57,8 @@ class VideosViewSet(
     )
     def ids(self, request: Request):
         return Response(
-            services.get_ids(self.get_queryset()), status=status.HTTP_200_OK
+            self.get_queryset().values_list("id", flat=True),
+            status=status.HTTP_200_OK,
         )
 
     @action(
@@ -56,7 +68,8 @@ class VideosViewSet(
         permission_classes=[permissions.IsAdminUser],
     )
     def statistics_subquery(self, request: Request):
-        return Response(services.statistics_subquery(), status.HTTP_200_OK)
+        data = self.get_queryset().statistics_subquery()
+        return Response(data, status.HTTP_200_OK)
 
     @action(
         methods=["get"],
@@ -65,4 +78,5 @@ class VideosViewSet(
         permission_classes=[permissions.IsAdminUser],
     )
     def statistics_group_by(self, request: Request):
-        return Response(services.statistics_group_by(), status.HTTP_200_OK)
+        data = self.get_queryset().statistics_group_by()
+        return Response(data, status.HTTP_200_OK)
